@@ -43,21 +43,14 @@ RUN apk add --no-cache bash
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install runtime dependencies including bashio for Home Assistant integration
+# Install runtime dependencies (jq for reading Home Assistant config)
 RUN apk update && \
     apk add --no-cache \
     nginx \
     supervisor \
     curl \
     openssl \
-    jq \
-    git && \
-    # Install bashio (Home Assistant add-on library)
-    git clone --depth 1 https://github.com/hassio-addons/bashio.git /tmp/bashio && \
-    mv /tmp/bashio/lib /usr/lib/bashio && \
-    ln -s /usr/lib/bashio/bashio /usr/bin/bashio && \
-    rm -rf /tmp/bashio && \
-    apk del git
+    jq
 
 # Create app directory
 WORKDIR /app

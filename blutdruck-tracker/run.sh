@@ -9,24 +9,26 @@ set -e
 echo "Starting Blood Pressure Tracker..."
 
 # -------------------------------------------------------------------------
-# Detect environment: Home Assistant (bashio) or standalone (testing)
+# Detect environment: Home Assistant or standalone (testing)
 # -------------------------------------------------------------------------
-if command -v bashio &> /dev/null; then
+if [ -f /data/options.json ]; then
     echo "Running in Home Assistant environment"
 
-    # Load options from add-on config using bashio command
-    SECRET_KEY=$(bashio config 'secret_key')
-    SMTP_SERVER=$(bashio config 'smtp_server')
-    SMTP_PORT=$(bashio config 'smtp_port')
-    SMTP_USERNAME=$(bashio config 'smtp_username')
-    SMTP_PASSWORD=$(bashio config 'smtp_password')
-    FROM_EMAIL=$(bashio config 'from_email')
-    LOG_LEVEL=$(bashio config 'log_level')
+    # Read options from Home Assistant add-on config using jq
+    CONFIG_PATH="/data/options.json"
+
+    SECRET_KEY=$(jq -r '.secret_key // empty' "$CONFIG_PATH")
+    SMTP_SERVER=$(jq -r '.smtp_server // empty' "$CONFIG_PATH")
+    SMTP_PORT=$(jq -r '.smtp_port // empty' "$CONFIG_PATH")
+    SMTP_USERNAME=$(jq -r '.smtp_username // empty' "$CONFIG_PATH")
+    SMTP_PASSWORD=$(jq -r '.smtp_password // empty' "$CONFIG_PATH")
+    FROM_EMAIL=$(jq -r '.from_email // empty' "$CONFIG_PATH")
+    LOG_LEVEL=$(jq -r '.log_level // "info"' "$CONFIG_PATH")
 
     # Validate
-    if bashio config.is_empty 'secret_key'; then
-        bashio log.fatal "SECRET_KEY is required! Configure it in the add-on options."
-        bashio log.fatal "Generate one with: openssl rand -hex 32"
+    if [ -z "$SECRET_KEY" ]; then
+        echo "❌ ERROR: SECRET_KEY is required! Configure it in the add-on options."
+        echo "Generate one with: openssl rand -hex 32"
         exit 1
     fi
 
@@ -38,13 +40,13 @@ if command -v bashio &> /dev/null; then
     export LOG_LEVEL="${LOG_LEVEL^^}"
 
     # Optional SMTP config
-    if bashio config.has_value 'smtp_server'; then
+    if [ -n "$SMTP_SERVER" ]; then
         export SMTP_SERVER="${SMTP_SERVER}"
         export SMTP_PORT="${SMTP_PORT}"
         export SMTP_USERNAME="${SMTP_USERNAME}"
         export SMTP_PASSWORD="${SMTP_PASSWORD}"
         export FROM_EMAIL="${FROM_EMAIL}"
-        bashio log.info "Email notifications enabled"
+        echo "✓ Email notifications enabled"
     fi
 else
     echo "Running in standalone mode (testing)"

@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.31] - 2025-10-10
 
 ### Fixed
-- 🐛 Installed bashio library for proper Home Assistant add-on integration
-- 🔧 Fixed database file detection (now properly uses addon.db in HA environment)
-- 📝 Updated standalone mode to also use addon.db for consistency
+- 🐛 Fixed Home Assistant configuration reading using jq instead of bashio
+- 🔧 Simplified add-on integration by reading /data/options.json directly
+- 📝 Database now correctly uses addon.db in HA environment
+- 🔨 Removed unnecessary bashio dependency
 
-### Added
-- ✅ Bashio support for reading Home Assistant add-on configuration
+### Changed
+- ⚡ Switched from bashio to direct JSON parsing with jq (more reliable)
+- 📋 Improved configuration validation and error messages
 
 ## [1.0.30] - 2025-10-10
 
