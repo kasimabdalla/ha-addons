@@ -14,22 +14,19 @@ echo "Starting Blood Pressure Tracker..."
 if command -v bashio &> /dev/null; then
     echo "Running in Home Assistant environment"
 
-    # Source bashio library to load functions
-    source /usr/lib/bashio/bashio
-
-    # Load options from add-on config
-    SECRET_KEY=$(bashio::config 'secret_key')
-    SMTP_SERVER=$(bashio::config 'smtp_server')
-    SMTP_PORT=$(bashio::config 'smtp_port')
-    SMTP_USERNAME=$(bashio::config 'smtp_username')
-    SMTP_PASSWORD=$(bashio::config 'smtp_password')
-    FROM_EMAIL=$(bashio::config 'from_email')
-    LOG_LEVEL=$(bashio::config 'log_level')
+    # Load options from add-on config using bashio command
+    SECRET_KEY=$(bashio config 'secret_key')
+    SMTP_SERVER=$(bashio config 'smtp_server')
+    SMTP_PORT=$(bashio config 'smtp_port')
+    SMTP_USERNAME=$(bashio config 'smtp_username')
+    SMTP_PASSWORD=$(bashio config 'smtp_password')
+    FROM_EMAIL=$(bashio config 'from_email')
+    LOG_LEVEL=$(bashio config 'log_level')
 
     # Validate
-    if bashio::config.is_empty 'secret_key'; then
-        bashio::log.fatal "SECRET_KEY is required! Configure it in the add-on options."
-        bashio::log.fatal "Generate one with: openssl rand -hex 32"
+    if bashio config.is_empty 'secret_key'; then
+        bashio log.fatal "SECRET_KEY is required! Configure it in the add-on options."
+        bashio log.fatal "Generate one with: openssl rand -hex 32"
         exit 1
     fi
 
@@ -41,13 +38,13 @@ if command -v bashio &> /dev/null; then
     export LOG_LEVEL="${LOG_LEVEL^^}"
 
     # Optional SMTP config
-    if bashio::config.has_value 'smtp_server'; then
+    if bashio config.has_value 'smtp_server'; then
         export SMTP_SERVER="${SMTP_SERVER}"
         export SMTP_PORT="${SMTP_PORT}"
         export SMTP_USERNAME="${SMTP_USERNAME}"
         export SMTP_PASSWORD="${SMTP_PASSWORD}"
         export FROM_EMAIL="${FROM_EMAIL}"
-        bashio::log.info "Email notifications enabled"
+        bashio log.info "Email notifications enabled"
     fi
 else
     echo "Running in standalone mode (testing)"
