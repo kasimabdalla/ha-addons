@@ -51,7 +51,7 @@ else
 
     # Defaults for local dev/testing
     export SECRET_KEY="${SECRET_KEY:-changeme-secret-key}"
-    export DATABASE_URL="${DATABASE_URL:-sqlite+aiosqlite:////data/auth.db}"
+    export DATABASE_URL="${DATABASE_URL:-sqlite+aiosqlite:////data/addon.db}"
     export ALLOWED_ORIGINS="${ALLOWED_ORIGINS:-*}"
     export ENVIRONMENT="${ENVIRONMENT:-production}"
     export LOG_LEVEL="${LOG_LEVEL:-INFO}"
@@ -107,8 +107,8 @@ else
 fi
 
 # Extra debug: check if DB is created elsewhere
-echo "Searching for any existing auth.db in container..."
-find / -name "auth.db" 2>/dev/null || echo "No auth.db found yet"
+echo "Searching for any existing addon.db in container..."
+find / -name "addon.db" 2>/dev/null || echo "No addon.db found yet"
 
 # -------------------------------------------------------------------------
 # Start supervisor (manages nginx + uvicorn)

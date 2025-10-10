@@ -5,6 +5,16 @@ All notable changes to the Blood Pressure Tracker Home Assistant add-on will be 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.31] - 2025-10-10
+
+### Fixed
+- 🐛 Installed bashio library for proper Home Assistant add-on integration
+- 🔧 Fixed database file detection (now properly uses addon.db in HA environment)
+- 📝 Updated standalone mode to also use addon.db for consistency
+
+### Added
+- ✅ Bashio support for reading Home Assistant add-on configuration
+
 ## [1.0.30] - 2025-10-10
 
 ### Changed

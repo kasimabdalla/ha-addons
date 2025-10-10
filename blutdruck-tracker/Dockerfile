@@ -43,14 +43,21 @@ RUN apk add --no-cache bash
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Install runtime dependencies
+# Install runtime dependencies including bashio for Home Assistant integration
 RUN apk update && \
     apk add --no-cache \
     nginx \
     supervisor \
     curl \
     openssl \
-    jq
+    jq \
+    git && \
+    # Install bashio (Home Assistant add-on library)
+    git clone --depth 1 https://github.com/hassio-addons/bashio.git /tmp/bashio && \
+    mv /tmp/bashio/lib /usr/lib/bashio && \
+    ln -s /usr/lib/bashio/bashio /usr/bin/bashio && \
+    rm -rf /tmp/bashio && \
+    apk del git
 
 # Create app directory
 WORKDIR /app
@@ -89,7 +96,7 @@ RUN mkdir -p /data && \
     chmod 777 /var/log/supervisor
 
 # Add version label to force rebuild
-LABEL version="1.0.30"
+LABEL version="1.0.31"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
@@ -101,7 +108,7 @@ LABEL \
     io.hass.description="Track and monitor blood pressure measurements" \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.type="addon" \
-    io.hass.version="1.0.30" \
+    io.hass.version="1.0.31" \
     maintainer="Your Name <your-email@example.com>" \
     org.opencontainers.image.title="Blood Pressure Tracker" \
     org.opencontainers.image.description="Track and monitor blood pressure measurements" \
