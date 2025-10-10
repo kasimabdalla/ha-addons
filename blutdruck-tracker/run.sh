@@ -14,6 +14,9 @@ echo "Starting Blood Pressure Tracker..."
 if command -v bashio &> /dev/null; then
     echo "Running in Home Assistant environment"
 
+    # Source bashio library to load functions
+    source /usr/lib/bashio/bashio
+
     # Load options from add-on config
     SECRET_KEY=$(bashio::config 'secret_key')
     SMTP_SERVER=$(bashio::config 'smtp_server')
