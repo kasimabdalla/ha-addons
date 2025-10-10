@@ -32,7 +32,7 @@ if command -v bashio &> /dev/null; then
 
     # Export env vars
     export SECRET_KEY="${SECRET_KEY}"
-    export DATABASE_URL="sqlite+aiosqlite:////data/auth.db"   # absolute path!
+    export DATABASE_URL="sqlite+aiosqlite:////data/addon.db"   # absolute path!
     export ALLOWED_ORIGINS="*"
     export ENVIRONMENT="production"
     export LOG_LEVEL="${LOG_LEVEL^^}"

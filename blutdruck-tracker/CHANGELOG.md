@@ -5,6 +5,17 @@ All notable changes to the Blood Pressure Tracker Home Assistant add-on will be 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.30] - 2025-10-10
+
+### Changed
+- 🔧 Renamed database file from `auth.db` to `addon.db` for clarity
+- 📦 Excluded development `.env` files from Docker image
+- 🧹 Cleaned up unnecessary build artifacts
+
+### Fixed
+- 🐛 Removed unused `app.db` file from Docker image
+- 🔒 Prevented development environment variables from being copied into production image
+
 ## [1.0.29] - 2025-10-10
 
 ### Added
@@ -57,5 +68,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[1.0.29]: https://github.com/kasimabdalla/blutdruck-app-v2/releases/tag/v1.0.29
-[1.0.0]: https://github.com/kasimabdalla/blutdruck-app-v2/releases/tag/v1.0.0
+[1.0.29]: https://github.com/yourusername/blutdruck-app-v2/releases/tag/v1.0.29
+[1.0.0]: https://github.com/yourusername/blutdruck-app-v2/releases/tag/v1.0.0
