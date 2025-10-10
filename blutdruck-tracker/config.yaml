@@ -62,10 +62,11 @@ schema:
 #  - "homeassistant_config:rw"
 
 map:
-  - config:rw
-  - share:rw
-  - ssl:rw
-
+  - "addon_config:rw"
+  - "homeassistant_config:rw"
+  - "share:rw"
+  - "ssl:rw"
+  
 # Optional: Access to Home Assistant API
 # homeassistant_api: false
 # hassio_api: false
