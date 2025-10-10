@@ -1,0 +1,84 @@
+---
+name: Blood Pressure Tracker
+version: "1.0.29"
+slug: blutdruck-tracker
+description: Track and monitor blood pressure measurements
+url: https://github.com/kasimabdalla/blutdruck-app-v2
+
+image: "ghcr.io/kasimabdalla/blutdruck-tracker"
+
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+
+init: false
+startup: application
+boot: auto
+
+# Web interface ports
+ports:
+  80/tcp: 8099
+
+ports_description:
+  80/tcp: Web interface (HTTP)
+
+# Ingress support (embedded in HA UI)
+ingress: true
+ingress_port: 80
+ingress_stream: false
+panel_icon: mdi:heart-pulse
+panel_title: Blood Pressure
+
+# Add-on options (user configurable)
+options:
+  secret_key: ""
+  smtp_server: ""
+  smtp_port: 587
+  smtp_username: ""
+  smtp_password: ""
+  from_email: ""
+  log_level: info
+
+schema:
+  secret_key: password?
+  smtp_server: str?
+  smtp_port: port
+  smtp_username: str?
+  smtp_password: password?
+  from_email: email?
+  log_level: list(debug|info|warning|error)?
+
+# Persistent storage
+# Map the add-on config directory for database persistence
+# This creates /addon_configs/[hash]_blutdruck-tracker/ on the host
+# and mounts it to /data inside the container
+#map:
+#map:
+#  - "data:rw"     # Persistent storage for the add-on (DB, runtime files)
+#  - "config:rw"   # Access to Home Assistant /config (optional for user configs)
+
+map:
+  - "addon_config:rw"
+  - "share:rw"
+  - "homeassistant_config:rw"
+
+#"map": [
+#    "addon_config:rw",
+#    "homeassistant_config:rw",
+#    "share:rw",
+#    "ssl:rw"
+#]
+
+# Optional: Access to Home Assistant API
+# homeassistant_api: false
+# hassio_api: false
+# hassio_role: default
+
+# Backup support
+backup: hot
+backup_exclude:
+  - "**/*.log"
+  - "**/logs/**"
