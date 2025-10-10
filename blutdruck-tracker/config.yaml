@@ -62,9 +62,9 @@ schema:
 #  - "homeassistant_config:rw"
 
 map:
-  - "addon_config:rw"
-  - "homeassistant_config:rw"
-  - "share:rw"
+  - addon_config:rw
+  - homeassistant_config:rw
+  - share:rw
 
   
 # Optional: Access to Home Assistant API
