@@ -3,7 +3,7 @@ name: Blood Pressure Tracker
 version: "1.0.31"
 slug: blutdruck-tracker
 description: Track and monitor blood pressure measurements
-url: https://github.com/yourusername/blutdruck-app-v2
+url: https://github.com/kasimabdalla/blutdruck-app-v2
 
 image: "ghcr.io/kasimabdalla/blutdruck-tracker"
 
@@ -55,11 +55,6 @@ schema:
 # Map the add-on config directory for database persistence
 # This creates /addon_configs/[hash]_blutdruck-tracker/ on the host
 # and mounts it to /data inside the container
-
-#map:
-#  - "addon_config:rw"
-#  - "share:rw"
-#  - "homeassistant_config:rw"
 
 map:
   - addon_config:rw
