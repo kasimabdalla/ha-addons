@@ -89,7 +89,7 @@ RUN mkdir -p /data && \
     chmod 777 /var/log/supervisor
 
 # Add version label to force rebuild
-LABEL version="1.0.31"
+LABEL version="1.0.32"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
