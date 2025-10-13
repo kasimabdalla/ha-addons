@@ -136,7 +136,3 @@ find / -name "addon.db" 2>/dev/null || echo "No addon.db found yet"
 # -------------------------------------------------------------------------
 echo "Starting services via supervisor..."
 exec /usr/bin/supervisord -c /etc/supervisord.conf
-# Start supervisor (manages nginx + uvicorn)
-# -------------------------------------------------------------------------
-echo "Starting services via supervisor..."
-exec /usr/bin/supervisord -c /etc/supervisord.conf
