@@ -4,7 +4,7 @@
 # Starts the Blood Pressure Tracker application
 # ==============================================================================
 
-set -eu  # Exit on error and on unset variable
+set -e
 
 echo "Starting Blood Pressure Tracker..."
 
@@ -14,28 +14,16 @@ echo "Starting Blood Pressure Tracker..."
 if [ -f /data/options.json ]; then
     echo "Running in Home Assistant environment"
 
+    # Read options from Home Assistant add-on config using jq
     CONFIG_PATH="/data/options.json"
 
-    # Read options from JSON (read each line separately)
-    {
-        read -r SECRET_KEY
-        read -r SMTP_SERVER
-        read -r SMTP_PORT
-        read -r SMTP_USERNAME
-        read -r SMTP_PASSWORD
-        read -r FROM_EMAIL
-        read -r LOG_LEVEL
-    } < <(
-        jq -r '
-            .secret_key,
-            .smtp_server // "",
-            .smtp_port // "587",
-            .smtp_username // "",
-            .smtp_password // "",
-            .from_email // "",
-            .log_level // "info"
-        ' "$CONFIG_PATH"
-    )
+    SECRET_KEY=$(jq -r '.secret_key // empty' "$CONFIG_PATH")
+    SMTP_SERVER=$(jq -r '.smtp_server // empty' "$CONFIG_PATH")
+    SMTP_PORT=$(jq -r '.smtp_port // empty' "$CONFIG_PATH")
+    SMTP_USERNAME=$(jq -r '.smtp_username // empty' "$CONFIG_PATH")
+    SMTP_PASSWORD=$(jq -r '.smtp_password // empty' "$CONFIG_PATH")
+    FROM_EMAIL=$(jq -r '.from_email // empty' "$CONFIG_PATH")
+    LOG_LEVEL=$(jq -r '.log_level // "info"' "$CONFIG_PATH")
 
     # Validate
     if [ -z "$SECRET_KEY" ]; then
@@ -45,27 +33,20 @@ if [ -f /data/options.json ]; then
     fi
 
     # Export env vars
-    export SECRET_KEY
-    export DATABASE_URL="sqlite+aiosqlite:////data/addon.db"
+    export SECRET_KEY="${SECRET_KEY}"
+    export DATABASE_URL="sqlite+aiosqlite:////data/addon.db"   # absolute path!
     export ALLOWED_ORIGINS="*"
     export ENVIRONMENT="production"
     export LOG_LEVEL="${LOG_LEVEL^^}"
 
     # Optional SMTP config
-    if [ -n "$SMTP_SERVER" ] && [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ]; then
-        export SMTP_SERVER SMTP_PORT SMTP_USERNAME SMTP_PASSWORD FROM_EMAIL
-        echo "✓ Email notifications enabled (SMTP: $SMTP_SERVER:$SMTP_PORT, User: $SMTP_USERNAME)"
-    else
-        echo "⚠ Email notifications disabled (SMTP not fully configured)"
-        if [ -n "$SMTP_SERVER" ]; then
-            echo "  SMTP_SERVER: configured"
-        fi
-        if [ -n "$SMTP_USERNAME" ]; then
-            echo "  SMTP_USERNAME: configured"
-        fi
-        if [ -n "$SMTP_PASSWORD" ]; then
-            echo "  SMTP_PASSWORD: configured"
-        fi
+    if [ -n "$SMTP_SERVER" ]; then
+        export SMTP_SERVER="${SMTP_SERVER}"
+        export SMTP_PORT="${SMTP_PORT}"
+        export SMTP_USERNAME="${SMTP_USERNAME}"
+        export SMTP_PASSWORD="${SMTP_PASSWORD}"
+        export FROM_EMAIL="${FROM_EMAIL}"
+        echo "✓ Email notifications enabled"
     fi
 else
     echo "Running in standalone mode (testing)"
@@ -91,7 +72,7 @@ fi
 # Ensure /data exists and is writable
 # -------------------------------------------------------------------------
 mkdir -p /data
-chmod 775 /data  # More secure than 777; adjust as needed
+chmod 777 /data
 
 echo "Database path: $DATABASE_URL"
 
