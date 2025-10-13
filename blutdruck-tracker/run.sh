@@ -16,15 +16,23 @@ if [ -f /data/options.json ]; then
 
     CONFIG_PATH="/data/options.json"
 
-    # Efficiently read options in one jq call
-    read SECRET_KEY SMTP_SERVER SMTP_PORT SMTP_USERNAME SMTP_PASSWORD FROM_EMAIL LOG_LEVEL < <(
+    # Read options from JSON (read each line separately)
+    {
+        read -r SECRET_KEY
+        read -r SMTP_SERVER
+        read -r SMTP_PORT
+        read -r SMTP_USERNAME
+        read -r SMTP_PASSWORD
+        read -r FROM_EMAIL
+        read -r LOG_LEVEL
+    } < <(
         jq -r '
             .secret_key,
-            .smtp_server // empty,
-            .smtp_port // empty,
-            .smtp_username // empty,
-            .smtp_password // empty,
-            .from_email // empty,
+            .smtp_server // "",
+            .smtp_port // "587",
+            .smtp_username // "",
+            .smtp_password // "",
+            .from_email // "",
             .log_level // "info"
         ' "$CONFIG_PATH"
     )
@@ -44,9 +52,20 @@ if [ -f /data/options.json ]; then
     export LOG_LEVEL="${LOG_LEVEL^^}"
 
     # Optional SMTP config
-    if [ -n "$SMTP_SERVER" ]; then
+    if [ -n "$SMTP_SERVER" ] && [ -n "$SMTP_USERNAME" ] && [ -n "$SMTP_PASSWORD" ]; then
         export SMTP_SERVER SMTP_PORT SMTP_USERNAME SMTP_PASSWORD FROM_EMAIL
-        echo "✓ Email notifications enabled"
+        echo "✓ Email notifications enabled (SMTP: $SMTP_SERVER:$SMTP_PORT, User: $SMTP_USERNAME)"
+    else
+        echo "⚠ Email notifications disabled (SMTP not fully configured)"
+        if [ -n "$SMTP_SERVER" ]; then
+            echo "  SMTP_SERVER: configured"
+        fi
+        if [ -n "$SMTP_USERNAME" ]; then
+            echo "  SMTP_USERNAME: configured"
+        fi
+        if [ -n "$SMTP_PASSWORD" ]; then
+            echo "  SMTP_PASSWORD: configured"
+        fi
     fi
 else
     echo "Running in standalone mode (testing)"
@@ -113,6 +132,10 @@ echo "Searching for any existing addon.db in container..."
 find / -name "addon.db" 2>/dev/null || echo "No addon.db found yet"
 
 # -------------------------------------------------------------------------
+# Start supervisor (manages nginx + uvicorn)
+# -------------------------------------------------------------------------
+echo "Starting services via supervisor..."
+exec /usr/bin/supervisord -c /etc/supervisord.conf
 # Start supervisor (manages nginx + uvicorn)
 # -------------------------------------------------------------------------
 echo "Starting services via supervisor..."
