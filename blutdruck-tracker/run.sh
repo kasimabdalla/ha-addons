@@ -17,6 +17,11 @@ if [ -f /data/options.json ]; then
     # Read options from Home Assistant add-on config using jq
     CONFIG_PATH="/data/options.json"
 
+    # Debug: Show raw options.json content
+    echo "=== DEBUG: Reading configuration from $CONFIG_PATH ==="
+    cat "$CONFIG_PATH"
+    echo "=== END DEBUG ==="
+
     SECRET_KEY=$(jq -r '.secret_key // empty' "$CONFIG_PATH")
     SMTP_SERVER=$(jq -r '.smtp_server // empty' "$CONFIG_PATH")
     SMTP_PORT=$(jq -r '.smtp_port // empty' "$CONFIG_PATH")
@@ -24,6 +29,17 @@ if [ -f /data/options.json ]; then
     SMTP_PASSWORD=$(jq -r '.smtp_password // empty' "$CONFIG_PATH")
     FROM_EMAIL=$(jq -r '.from_email // empty' "$CONFIG_PATH")
     LOG_LEVEL=$(jq -r '.log_level // "info"' "$CONFIG_PATH")
+
+    # Debug: Show what was read
+    echo "=== Configuration values read ==="
+    echo "SECRET_KEY: ${SECRET_KEY:0:10}... (${#SECRET_KEY} chars)"
+    echo "SMTP_SERVER: '$SMTP_SERVER'"
+    echo "SMTP_PORT: '$SMTP_PORT'"
+    echo "SMTP_USERNAME: '$SMTP_USERNAME'"
+    echo "SMTP_PASSWORD: ${SMTP_PASSWORD:+***configured***}"
+    echo "FROM_EMAIL: '$FROM_EMAIL'"
+    echo "LOG_LEVEL: '$LOG_LEVEL'"
+    echo "==================================="
 
     # Validate
     if [ -z "$SECRET_KEY" ]; then
