@@ -31,7 +31,7 @@ ingress_port: 80
 ingress_stream: false
 panel_icon: mdi:heart-pulse
 panel_title: Blood Pressure
-
+require_admin: false
 # Add-on options (user configurable)
 options:
   secret_key: ""
