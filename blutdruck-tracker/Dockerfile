@@ -1,7 +1,7 @@
 # Home Assistant Add-on Dockerfile for Blood Pressure Tracker
 # Multi-stage build: Frontend → Backend → Production
 
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:18.1.4
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:18.2.1
 ARG BUILD_ARCH=amd64
 
 # ============================================
