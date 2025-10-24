@@ -89,7 +89,7 @@ RUN mkdir -p /data && \
     chmod 777 /var/log/supervisor
 
 # Add version label to force rebuild
-LABEL version="1.0.39"
+LABEL version="1.0.40"
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
@@ -101,7 +101,7 @@ LABEL \
     io.hass.description="Track and monitor blood pressure measurements" \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.type="addon" \
-    io.hass.version="1.0.39" \
+    io.hass.version="1.0.40" \
     maintainer="Your Name <your-email@example.com>" \
     org.opencontainers.image.title="Blood Pressure Tracker" \
     org.opencontainers.image.description="Track and monitor blood pressure measurements" \
