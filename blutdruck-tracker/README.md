@@ -28,17 +28,6 @@ This Home Assistant add-on provides a full-featured blood pressure tracking appl
 5. Configure the add-on (see Configuration below)
 6. Click **Start**
 
-### Method 2: Manual Installation (Development)
-
-```bash
-# Clone the repository
-git clone https://github.com/kasimabdalla/blutdruck-app-v2
-cd blutdruck-app-v2
-
-# Add as local add-on in Home Assistant
-# Settings → Add-ons → Add-on Store → ⋮ → Repositories
-# Add: /path/to/blutdruck-app-v2
-```
 
 ## Configuration
 
@@ -74,107 +63,6 @@ log_level: "info"
 3. Access via **Open Web UI** or sidebar panel (❤️ icon)
 4. Log in with username `admin` and the generated password
 5. **Change password immediately** in Settings
-
-### Access Methods
-
-**Ingress (Default - Recommended):**
-- ✅ Embedded in Home Assistant UI
-- ✅ Click "Open Web UI" or sidebar panel (❤️ icon)
-- ✅ No additional configuration needed
-- ✅ Works with authentication and email verification
-- ✅ Automatically handles URL paths for email links
-
-**Direct Access:**
-- Available at: `http://homeassistant.local:8099`
-- Useful for external access or mobile bookmarks
-- Requires network access to the specified port
-
-## Features
-
-### Blood Pressure Tracking
-- Log systolic, diastolic, and pulse measurements
-- Add notes and timestamps
-- View history and trends
-
-### Analytics
-- Interactive charts and graphs
-- Trend analysis
-- Date range filtering
-- Export data (coming soon)
-
-### User Management
-- Multi-user support
-- Role-based access (admin/user)
-- Email verification
-- Password reset via email
-
-## Files
-
-```
-homeassistant/
-├── config.yaml          # Add-on metadata and options
-├── Dockerfile           # Multi-stage build
-├── run.sh              # Startup script
-├── DOCS.md             # User documentation
-├── CHANGELOG.md        # Version history
-├── README.md           # This file
-└── icon.png            # Add-on icon (optional)
-```
-
-## Development
-
-### Building Locally
-
-**Important**: Build from project root with Dockerfile context:
-
-```bash
-# Navigate to project root
-cd blutdruck-app-v2
-
-# Build for local architecture (context = project root)
-docker build -t blutdruck-tracker \
-  --build-arg BUILD_FROM=ghcr.io/hassio-addons/base:18.1.4 \
-  -f homeassistant/Dockerfile \
-  .
-
-docker save local/blutdruck-tracker:latest | gzip > blutdruck-app.tar.gz
-
-# Run locally for testing
-docker run --rm -it \
-  -v $(pwd)/data:/data \
-  -p 8099:80 \
-  blutdruck-tracker
-```
-
-**Note**: The Dockerfile uses parent context paths (e.g., `COPY frontend/` instead of `COPY ../frontend/`), so it must be built from the project root.
-
-### Multi-Architecture Build
-
-```bash
-# Build for all architectures (from project root)
-cd blutdruck-app-v2
-
-docker buildx build \
-  --platform linux/amd64,linux/arm64,linux/arm/v7 \
-  -t ghcr.io/kasimabdalla/blutdruck-tracker:latest \
-  --push \
-  -f homeassistant/Dockerfile \
-  .
-```
-
-### Home Assistant Builder
-
-When using Home Assistant's official builder, create `repository.yaml`:
-
-```yaml
-name: Blood Pressure Add-ons
-url: https://github.com/kasimabdalla/blutdruck-app-v2
-```
-
-Then point HA to the repository root. The builder will automatically:
-1. Find `homeassistant/config.yaml`
-2. Use `homeassistant/Dockerfile`
-3. Build from repository root (parent context)
 
 ## Support
 
